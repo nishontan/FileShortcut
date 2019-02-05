@@ -20,7 +20,6 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ShortcutManager
-import android.databinding.BindingAdapter
 import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
@@ -81,9 +80,11 @@ class CreateShortcutActivity : KodeinAppCompatActivity(), View.OnClickListener {
                 return@forEach
             } else if (it == Intent.EXTRA_TEXT) {
                 intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
-                    binding.filePath = it
-                    val thumbnailUrl = WebUrlUtils.getThumbnailUrl(it);
-                    setImage(thumbnailUrl, this)
+                    if(WebUrlUtils.isValidYoutubeUrl(it)){
+                        binding.filePath = it
+                        val thumbnailUrl = WebUrlUtils.getThumbnailUrl(it);
+                        setImage(thumbnailUrl, this)
+                    }
                 }
             } else if (it == Intent.EXTRA_SUBJECT) {
                 intent.getStringExtra(Intent.EXTRA_SUBJECT)?.let {
@@ -254,11 +255,6 @@ class CreateShortcutActivity : KodeinAppCompatActivity(), View.OnClickListener {
         }
 
         return super.onCreateOptionsMenu(menu)
-    }
-
-    @BindingAdapter("imageUrl")
-    fun setImageUrl(imageView: ImageView, url: String?) {
-        GlideApp.with(imageView.context).load(url).into(imageView)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

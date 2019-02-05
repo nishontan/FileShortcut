@@ -1,7 +1,5 @@
 package com.nagopy.android.fileshortcut
 
-import java.util.regex.Pattern
-
 object WebUrlUtils {
 
 
@@ -11,11 +9,21 @@ object WebUrlUtils {
     @JvmStatic
     fun isValidYoutubeUrl(url: String): Boolean {
         val youtubeUrlRegex = "^(http(s)?://)?((w){3}.)?youtu(be|.be)?(\\.com)?/.+";
-        val regex = Regex(pattern = youtubeUrlRegex)
+        return regexUrlMatcher(url, youtubeUrlRegex)
+    }
+
+    @JvmStatic
+    fun regexUrlMatcher(url: String, regexString: String): Boolean {
+        val regex = Regex(pattern = regexString)
         val matched = regex.containsMatchIn(input = url)
         return matched;
     }
 
+    @JvmStatic
+    fun isValidInstagramUrl(url: String): Boolean {
+        val instagramUrlRegex = "/(https?:\\/\\/www\\.)?instagram\\.com(\\/p\\/\\w+\\/?)/"
+        return regexUrlMatcher(url, instagramUrlRegex)
+    }
 
     /*
     * https://stackoverflow.com/questions/3452546/how-do-i-get-the-youtube-video-id-from-a-url
