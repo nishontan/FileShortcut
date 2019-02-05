@@ -19,20 +19,27 @@ class ReceiveSharedTextActivity : KodeinAppCompatActivity() {
                 if ("text/plain" == intent.type) {
                     handleSendText(intent)
                 } else {
-
+                    close()
                 }
             }
             else -> {
+                close()
             }
         }
     }
 
+    private fun close() {
+        showErrorMessage(R.string.msg_unsupported_feature)
+        finish()
+    }
+
+
     private fun handleSendText(intent: Intent) {
         intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
             if (isSupportedUrl(it)) {
-                createShortcut(it)
-            } else {
 
+            } else {
+                close()
             }
         }
     }
