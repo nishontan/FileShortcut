@@ -39,6 +39,4 @@
     <string name="open_source_license">Open source license</string>
     <string name="action_more">More</string>
     <string name="action_edit">Edit created shortcuts</string>
-    <string name="msg_unsupported_feature">Unsupported feature</string>
-    <string name="msg_open_in_app">Open in PinThings</string>
 </resources>

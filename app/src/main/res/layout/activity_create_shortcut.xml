@@ -37,7 +37,8 @@
 
         <variable
             name="shortcutIcon"
-            type="android.net.Uri" />
+            type="android.net.Uri " />
+
 
         <variable
             name="onClickListener"
@@ -102,6 +103,7 @@
                 android:layout_height="@android:dimen/app_icon_size"
                 android:contentDescription="@null"
                 android:scaleType="fitCenter"
+                imageUrl=""
                 android:src="@{shortcutIcon}" />
 
             <Button

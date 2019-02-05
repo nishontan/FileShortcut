@@ -17,10 +17,13 @@
 package com.nagopy.android.fileshortcut
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.ShortcutManager
+import android.databinding.BindingAdapter
 import android.databinding.DataBindingUtil
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.media.ThumbnailUtils
 import android.net.Uri
 import android.os.Build
@@ -32,6 +35,8 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.github.salomonbrys.kodein.android.KodeinAppCompatActivity
 import com.github.salomonbrys.kodein.instance
 import com.nagopy.android.fileshortcut.databinding.ActivityCreateShortcutBinding
@@ -74,8 +79,33 @@ class CreateShortcutActivity : KodeinAppCompatActivity(), View.OnClickListener {
                 data.data = uri
                 onActivityResult(REQUEST_CODE_FILE, RESULT_OK, data)
                 return@forEach
+            } else if (it == Intent.EXTRA_TEXT) {
+                intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
+                    binding.filePath = it
+                    val thumbnailUrl = WebUrlUtils.getThumbnailUrl(it);
+                    setImage(thumbnailUrl, this)
+                }
+            } else if (it == Intent.EXTRA_SUBJECT) {
+                intent.getStringExtra(Intent.EXTRA_SUBJECT)?.let {
+                    binding.shortcutName = it
+                }
             }
         }
+    }
+
+    fun setImage(url: String, context: Context) {
+        GlideApp.with(context)
+                .asBitmap()
+                .load(url)
+                .into(object : SimpleTarget<Bitmap>() {
+                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                        binding.targetShortcutIcon.setImageBitmap(resource)
+                    }
+
+                    override fun onLoadFailed(errorDrawable: Drawable?) {
+                    }
+                })
+
     }
 
     override fun onStart() {
@@ -224,6 +254,11 @@ class CreateShortcutActivity : KodeinAppCompatActivity(), View.OnClickListener {
         }
 
         return super.onCreateOptionsMenu(menu)
+    }
+
+    @BindingAdapter("imageUrl")
+    fun setImageUrl(imageView: ImageView, url: String?) {
+        GlideApp.with(imageView.context).load(url).into(imageView)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
