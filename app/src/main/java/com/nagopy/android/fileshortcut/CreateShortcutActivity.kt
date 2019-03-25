@@ -80,10 +80,16 @@ class CreateShortcutActivity : KodeinAppCompatActivity(), View.OnClickListener {
                 return@forEach
             } else if (it == Intent.EXTRA_TEXT) {
                 intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
-                    if(WebUrlUtils.isValidYoutubeUrl(it)){
+                    if (WebUrlUtils.isValidYoutubeUrl(it)) {
                         binding.filePath = it
-                        val thumbnailUrl = WebUrlUtils.getThumbnailUrl(it);
+                        val thumbnailUrl = WebUrlUtils.getThumbnailUrl(it)
                         setImage(thumbnailUrl, this)
+                    } else if (WebUrlUtils.isValidInstagramUrl(it)) {
+                        binding.filePath = it
+                        val thumbnailUrl = WebUrlUtils.getThumbnailUrl(it)
+                        setImage(thumbnailUrl, this)
+                        binding.shortcutName = it
+                        Timber.i(it)
                     }
                 }
             } else if (it == Intent.EXTRA_SUBJECT) {
@@ -104,6 +110,7 @@ class CreateShortcutActivity : KodeinAppCompatActivity(), View.OnClickListener {
                     }
 
                     override fun onLoadFailed(errorDrawable: Drawable?) {
+                        Timber.e("Failed to load thumbnail")
                     }
                 })
 

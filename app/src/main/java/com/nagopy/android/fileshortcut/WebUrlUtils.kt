@@ -1,5 +1,7 @@
 package com.nagopy.android.fileshortcut
 
+import timber.log.Timber
+
 object WebUrlUtils {
 
 
@@ -21,8 +23,9 @@ object WebUrlUtils {
 
     @JvmStatic
     fun isValidInstagramUrl(url: String): Boolean {
-        val instagramUrlRegex = "/(https?:\\/\\/www\\.)?instagram\\.com(\\/p\\/\\w+\\/?)/"
-        return regexUrlMatcher(url, instagramUrlRegex)
+//        val instagramUrlRegex = "/(https?:\\/\\/www\\.)?instagram\\.com(\\/p\\/\\w+\\/?)/"
+//        return regexUrlMatcher(url, instagramUrlRegex)
+        return url.contains("instagram");
     }
 
     /*
@@ -37,9 +40,27 @@ object WebUrlUtils {
 
 
     @JvmStatic
-    fun getThumbnailUrl(youtubeUrl: String): String {
-        val videoId = getVideoIdFromUrl(youtubeUrl)
-        return "https://img.youtube.com/vi/%s/default.jpg".format(videoId);
+    fun getThumbnailUrl(url: String): String {
+        var imageUrl: String = ""
+        if (isValidInstagramUrl(url)) {
+            val postId = getInstagramPostIdFromUrl(url)
+            imageUrl = "https://www.instagram.com/p/%s/media/?size=t".format(postId)
+        } else if (isValidYoutubeUrl(url)) {
+            val videoId = getVideoIdFromUrl(url)
+            imageUrl = "https://img.youtube.com/vi/%s/default.jpg".format(videoId)
+        }
+
+        return imageUrl
+    }
+
+    /**
+     * https://nono.ma/says/get-an-instagram-image-url
+     * parsing https://www.instagram.com/p/Bva8L69gjAx/?utm_source=ig_share_sheet&igshid=e7zwwsm4b9rj for Bva8L69gjAx
+     */
+    private fun getInstagramPostIdFromUrl(url: String): String {
+        var id = url.split("/")[4]
+        Timber.i(id)
+        return id
     }
 
 }
